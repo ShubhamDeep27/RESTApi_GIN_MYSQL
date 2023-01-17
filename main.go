@@ -3,7 +3,8 @@ package main
 import (
 	"log"
 	"rest/gin/Config"
-	"rest/gin/Models"
+	"rest/gin/models"
+
 	"rest/gin/Routes"
 
 	"gorm.io/driver/mysql"
@@ -19,7 +20,7 @@ func init() {
 		log.Fatal("Status:", err)
 	}
 
-	Config.DB.AutoMigrate(&Models.Employee{})
+	Config.DB.AutoMigrate(&models.Employee{})
 }
 
 func main() {

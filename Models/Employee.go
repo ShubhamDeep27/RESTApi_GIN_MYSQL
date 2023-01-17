@@ -1,38 +1,16 @@
-package Models
+package models
 
-import (
-	"rest/gin/Config"
-
-	_ "github.com/go-sql-driver/mysql"
-)
-
-func GetAllEmployees(employee *[]Employee) (err error) {
-	if err = Config.DB.Find(&employee).Error; err != nil {
-		return err
-	}
-	return nil
-
+type Employee struct {
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	Mobile   string `json:"mobile"`
+	Address  string `json:"address"`
+	Salary   int    `json:"salary"`
+	Age      int    `json:"age"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-func CreateEmployees(employee *Employee) (err error) {
-
-	if err = Config.DB.Create(&employee).Error; err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func GetEmployeeById(employee *Employee, id string) (err error) {
-	if err = Config.DB.Where("id = ?", id).First(employee).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func UpdateEmployee(employee *Employee, id string) (err error) {
-	if err = Config.DB.Save(employee).Error; err != nil {
-		return err
-	}
-	return nil
+func (b *Employee) TableName() string {
+	return "Employee"
 }

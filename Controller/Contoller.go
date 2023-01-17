@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"rest/gin/Models"
+	"rest/gin/dao"
+	"rest/gin/models"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetEmployess(c *gin.Context) {
-	var employee []Models.Employee
-
-	err := Models.GetAllEmployees(&employee)
+	var employee []models.Employee
+	err := dao.GetAllEmployees(&employee)
 	if err != nil {
 		log.Fatal("Error while getting Employees")
 		c.AbortWithStatus(http.StatusNotFound)
@@ -21,10 +21,10 @@ func GetEmployess(c *gin.Context) {
 	}
 }
 func GetEmployeeById(c *gin.Context) {
-	var employee Models.Employee
+	var employee models.Employee
 	id := c.Param("id")
 
-	err := Models.GetEmployeeById(&employee, id)
+	err := dao.GetEmployeeById(&employee, id)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
@@ -32,10 +32,10 @@ func GetEmployeeById(c *gin.Context) {
 	}
 }
 func CreateEmployees(c *gin.Context) {
-	var employee Models.Employee
+	var employee models.Employee
 
 	c.BindJSON(&employee)
-	err := Models.CreateEmployees(&employee)
+	err := dao.CreateEmployees(&employee)
 	if err != nil {
 		log.Fatal("Error while Creating Employee")
 		c.AbortWithStatus(http.StatusNotFound)
@@ -46,16 +46,16 @@ func CreateEmployees(c *gin.Context) {
 
 func UpdateEmployee(c *gin.Context) {
 
-	var employee Models.Employee
+	var employee models.Employee
 	id := c.Param("id")
 	fmt.Print(id)
-	err := Models.GetEmployeeById(&employee, id)
+	err := dao.GetEmployeeById(&employee, id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, employee)
 	}
 
 	c.BindJSON(&employee)
-	err = Models.UpdateEmployee(&employee, id)
+	err = dao.UpdateEmployee(&employee, id)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
