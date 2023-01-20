@@ -12,7 +12,6 @@ import (
 )
 
 var err error
-var dbDriver string = "mysql"
 
 func init() {
 	Config.DB, err = gorm.Open(mysql.Open(Config.DbURL(Config.BuildDBConfig())), &gorm.Config{})
@@ -21,6 +20,7 @@ func init() {
 	}
 
 	Config.DB.AutoMigrate(&models.Employee{})
+
 }
 
 func main() {

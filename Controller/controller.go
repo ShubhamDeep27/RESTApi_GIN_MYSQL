@@ -10,10 +10,10 @@ import (
 )
 
 type EmployeeController struct {
-	employeeService *service.EmployeeService
+	employeeService service.EmployeeService
 }
 
-func NewEmployeeController(es *service.EmployeeService) *EmployeeController {
+func NewEmployeeController(es service.EmployeeService) *EmployeeController {
 	return &EmployeeController{employeeService: es}
 }
 
@@ -33,7 +33,8 @@ func (ec *EmployeeController) GetEmployeeById(c *gin.Context) {
 
 	err := ec.employeeService.GetEmployeeById(&employee, id)
 	if err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "record not Found"})
+
 	} else {
 		c.JSON(http.StatusOK, employee)
 	}
@@ -44,8 +45,7 @@ func (ec *EmployeeController) CreateEmployees(c *gin.Context) {
 	c.BindJSON(&employee)
 	err := ec.employeeService.CreateEmployees(&employee)
 	if err != nil {
-		log.Fatal("Error while Creating Employee")
-		c.AbortWithStatus(http.StatusNotFound)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Error while creating Employee"})
 	} else {
 		c.JSON(http.StatusOK, employee)
 	}
