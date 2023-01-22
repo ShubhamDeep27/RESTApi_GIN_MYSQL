@@ -1,15 +1,14 @@
 package service
 
 import (
-	"errors"
 	dao "rest/gin/Dao"
 	models "rest/gin/models"
 )
 
 type EmployeeService interface {
-	GetAllEmployees(employee *[]models.Employee) (err error)
+	GetAllEmployees() ([]*models.Employee, error)
 	CreateEmployees(employee *models.Employee) (err error)
-	GetEmployeeById(employee *models.Employee, id string) (err error)
+	GetEmployeeById(id string) (*models.Employee, error)
 	UpdateEmployee(employee *models.Employee, id string) (err error)
 }
 
@@ -21,13 +20,13 @@ func NewEmployeeServiceImpl(dao dao.EmployeeDao) EmployeeService {
 	return &EmployeeServiceImpl{empdao: dao}
 }
 
-func (es *EmployeeServiceImpl) GetAllEmployees(employee *[]models.Employee) (err error) {
+func (es *EmployeeServiceImpl) GetAllEmployees() ([]*models.Employee, error) {
 
-	err = es.empdao.GetAllEmployees(employee)
+	employee, err := es.empdao.GetAllEmployees()
 	if err != nil {
-		return err
+		return employee, err
 	}
-	return nil
+	return employee, nil
 
 }
 
@@ -41,18 +40,18 @@ func (es *EmployeeServiceImpl) CreateEmployees(employee *models.Employee) (err e
 
 }
 
-func (es *EmployeeServiceImpl) GetEmployeeById(employee *models.Employee, id string) (err error) {
-	err = es.empdao.GetEmployeeById(employee, id)
+func (es *EmployeeServiceImpl) GetEmployeeById(id string) (*models.Employee, error) {
+
+	employee, err := es.empdao.GetEmployeeById(id)
 	if err != nil {
-		return errors.New("record not found")
+		return employee, err
 	}
-	return nil
+	return employee, nil
 
 }
 
-func (es *EmployeeServiceImpl) UpdateEmployee(employee *models.Employee, id string) (err error) {
-	var tempemployee models.Employee
-	err = es.empdao.GetEmployeeById(&tempemployee, id)
+func (es *EmployeeServiceImpl) UpdateEmployee(employee *models.Employee, id string) error {
+	_, err := es.empdao.GetEmployeeById(id)
 	if err != nil {
 		return err
 	}

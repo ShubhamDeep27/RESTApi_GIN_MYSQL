@@ -49,31 +49,33 @@ func (mr *MockEmployeeServiceMockRecorder) CreateEmployees(arg0 interface{}) *go
 }
 
 // GetAllEmployees mocks base method.
-func (m *MockEmployeeService) GetAllEmployees(arg0 *[]models.Employee) error {
+func (m *MockEmployeeService) GetAllEmployees() ([]*models.Employee, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllEmployees", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret := m.ctrl.Call(m, "GetAllEmployees")
+	ret0, _ := ret[0].([]*models.Employee)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // GetAllEmployees indicates an expected call of GetAllEmployees.
-func (mr *MockEmployeeServiceMockRecorder) GetAllEmployees(arg0 interface{}) *gomock.Call {
+func (mr *MockEmployeeServiceMockRecorder) GetAllEmployees() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllEmployees", reflect.TypeOf((*MockEmployeeService)(nil).GetAllEmployees), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllEmployees", reflect.TypeOf((*MockEmployeeService)(nil).GetAllEmployees))
 }
 
 // GetEmployeeById mocks base method.
-func (m *MockEmployeeService) GetEmployeeById(arg0 *models.Employee, arg1 string) error {
+func (m *MockEmployeeService) GetEmployeeById(arg0 string) (*models.Employee, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetEmployeeById", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret := m.ctrl.Call(m, "GetEmployeeById", arg0)
+	ret0, _ := ret[0].(*models.Employee)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // GetEmployeeById indicates an expected call of GetEmployeeById.
-func (mr *MockEmployeeServiceMockRecorder) GetEmployeeById(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockEmployeeServiceMockRecorder) GetEmployeeById(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEmployeeById", reflect.TypeOf((*MockEmployeeService)(nil).GetEmployeeById), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEmployeeById", reflect.TypeOf((*MockEmployeeService)(nil).GetEmployeeById), arg0)
 }
 
 // UpdateEmployee mocks base method.

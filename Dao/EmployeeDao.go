@@ -8,10 +8,10 @@ import (
 )
 
 type EmployeeDao interface {
-	GetAllEmployees(employee *[]models.Employee) (err error)
-	CreateEmployees(employee *models.Employee) (err error)
-	GetEmployeeById(employee *models.Employee, id string) (err error)
-	UpdateEmployee(employee *models.Employee, id string) (err error)
+	GetAllEmployees() ([]*models.Employee, error)
+	CreateEmployees(employee *models.Employee) error
+	GetEmployeeById(id string) (*models.Employee, error)
+	UpdateEmployee(employee *models.Employee, id string) error
 }
 
 type EmployeeDaoImpl struct {
@@ -21,11 +21,12 @@ func NewEmployeeDaoImpl() *EmployeeDaoImpl {
 	return &EmployeeDaoImpl{}
 }
 
-func (ed *EmployeeDaoImpl) GetAllEmployees(employee *[]models.Employee) (err error) {
-	if err = Config.DB.Find(&employee).Error; err != nil {
-		return err
+func (ed *EmployeeDaoImpl) GetAllEmployees() ([]*models.Employee, error) {
+	var employee []*models.Employee
+	if err := Config.DB.Find(&employee).Error; err != nil {
+		return employee, err
 	}
-	return nil
+	return employee, nil
 
 }
 
@@ -38,11 +39,12 @@ func (ed *EmployeeDaoImpl) CreateEmployees(employee *models.Employee) (err error
 	return nil
 }
 
-func (ed *EmployeeDaoImpl) GetEmployeeById(employee *models.Employee, id string) (err error) {
-	if err = Config.DB.Where("id = ?", id).First(employee).Error; err != nil {
-		return err
+func (ed *EmployeeDaoImpl) GetEmployeeById(id string) (*models.Employee, error) {
+	var employee *models.Employee
+	if err := Config.DB.Where("id = ?", id).First(&employee).Error; err != nil {
+		return employee, err
 	}
-	return nil
+	return employee, nil
 }
 
 func (ed *EmployeeDaoImpl) UpdateEmployee(employee *models.Employee, id string) (err error) {

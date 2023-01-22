@@ -1,7 +1,6 @@
 package Controller
 
 import (
-	"log"
 	"net/http"
 	service "rest/gin/Service"
 	"rest/gin/models"
@@ -18,22 +17,20 @@ func NewEmployeeController(es service.EmployeeService) *EmployeeController {
 }
 
 func (ec *EmployeeController) GetEmployess(c *gin.Context) {
-	var employee []models.Employee
-	err := ec.employeeService.GetAllEmployees(&employee)
+
+	employee, err := ec.employeeService.GetAllEmployees()
 	if err != nil {
-		log.Fatal("Error while getting Employees")
-		c.AbortWithStatus(http.StatusNotFound)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Records not Found"})
+
 	} else {
 		c.JSON(http.StatusOK, employee)
 	}
 }
 func (ec *EmployeeController) GetEmployeeById(c *gin.Context) {
-	var employee models.Employee
 	id := c.Param("id")
-
-	err := ec.employeeService.GetEmployeeById(&employee, id)
+	employee, err := ec.employeeService.GetEmployeeById(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "record not Found"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Employee Not Exist"})
 
 	} else {
 		c.JSON(http.StatusOK, employee)
@@ -58,7 +55,7 @@ func (ec *EmployeeController) UpdateEmployee(c *gin.Context) {
 	c.BindJSON(&employee)
 	err := ec.employeeService.UpdateEmployee(&employee, id)
 	if err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Employee Not Exist"})
 	} else {
 		c.JSON(http.StatusOK, employee)
 	}
