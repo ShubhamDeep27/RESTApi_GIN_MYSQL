@@ -1,0 +1,18 @@
+mode: set
+rest/gin/Controller/controller.go:15.76,17.2 1 1
+rest/gin/Controller/controller.go:19.60,22.16 2 1
+rest/gin/Controller/controller.go:22.16,25.3 1 1
+rest/gin/Controller/controller.go:25.8,27.3 1 1
+rest/gin/Controller/controller.go:29.63,32.16 3 1
+rest/gin/Controller/controller.go:32.16,35.3 1 1
+rest/gin/Controller/controller.go:35.8,37.3 1 1
+rest/gin/Controller/controller.go:39.63,42.46 2 1
+rest/gin/Controller/controller.go:47.2,48.16 2 1
+rest/gin/Controller/controller.go:42.46,45.3 2 1
+rest/gin/Controller/controller.go:48.16,50.3 1 1
+rest/gin/Controller/controller.go:50.8,52.3 1 1
+rest/gin/Controller/controller.go:55.62,59.46 3 1
+rest/gin/Controller/controller.go:63.2,64.16 2 1
+rest/gin/Controller/controller.go:59.46,62.3 2 0
+rest/gin/Controller/controller.go:64.16,66.3 1 1
+rest/gin/Controller/controller.go:66.8,68.3 1 1

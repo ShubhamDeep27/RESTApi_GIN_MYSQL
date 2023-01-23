@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-
 	"os"
 	"rest/gin/models"
 	"testing"
@@ -13,15 +12,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// func requireBodyMatchEmployee(t *testing.T, body *bytes.Buffer, emp models.Employee) {
-// 	data, err := ioutil.ReadAll(body)
-// 	require.NoError(t, err)
+func requireBodyMatchEmployee(t *testing.T, body *bytes.Buffer, emp models.Employee) {
 
-// 	var gotemp models.Employee
-// 	err = json.Unmarshal(data, &gotemp)
-// 	require.NoError(t, err)
-// 	require.Equal(t, emp, gotemp)
-// }
+	var gotemp models.Employee
+	err := json.Unmarshal(body.Bytes(), &gotemp)
+	require.NoError(t, err)
+	require.Equal(t, emp, gotemp)
+}
 
 func requireBodyMatchEmployees(t *testing.T, body *bytes.Buffer, emp []*models.Employee) {
 	data, err := io.ReadAll(body)
