@@ -1,0 +1,16 @@
+mode: set
+rest/gin/Service/employeeservice.go:19.66,21.2 1 1
+rest/gin/Service/employeeservice.go:23.78,26.16 2 1
+rest/gin/Service/employeeservice.go:29.2,29.22 1 1
+rest/gin/Service/employeeservice.go:26.16,28.3 1 1
+rest/gin/Service/employeeservice.go:33.87,35.16 2 1
+rest/gin/Service/employeeservice.go:39.2,39.12 1 1
+rest/gin/Service/employeeservice.go:35.16,38.3 1 1
+rest/gin/Service/employeeservice.go:43.85,46.16 2 1
+rest/gin/Service/employeeservice.go:49.2,49.22 1 1
+rest/gin/Service/employeeservice.go:46.16,48.3 1 1
+rest/gin/Service/employeeservice.go:53.91,55.16 2 1
+rest/gin/Service/employeeservice.go:58.2,59.16 2 1
+rest/gin/Service/employeeservice.go:63.2,63.12 1 1
+rest/gin/Service/employeeservice.go:55.16,57.3 1 1
+rest/gin/Service/employeeservice.go:59.16,61.3 1 1
