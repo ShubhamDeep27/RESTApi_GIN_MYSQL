@@ -17,19 +17,98 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestGetEmployess_Success(t *testing.T) {
-	employeeList := []*models.Employee{
-		{
-			ID:       2,
-			Name:     "Ram",
-			Mobile:   "78589535",
-			Address:  "Delhi",
-			Salary:   34566,
-			Age:      23,
-			Username: "ram",
-			Password: "123",
-		},
-		{
+func TestGetEmployess(t *testing.T) {
+
+	t.Run("TestGetEmployess_Success", func(t *testing.T) {
+
+		employeeList := []*models.Employee{
+			{
+				ID:       2,
+				Name:     "Ram",
+				Mobile:   "78589535",
+				Address:  "Delhi",
+				Salary:   34566,
+				Age:      23,
+				Username: "ram",
+				Password: "123",
+			},
+			{
+				ID:       3,
+				Name:     "Raj",
+				Mobile:   "7854589535",
+				Address:  "UP",
+				Salary:   36566,
+				Age:      21,
+				Username: "raj",
+				Password: "1234",
+			},
+		}
+
+		cntrl := gomock.NewController(t)
+		defer cntrl.Finish()
+
+		mockWorker := NewMockEmployeeService(cntrl)
+		empController := NewEmployeeController(mockWorker)
+
+		mockWorker.EXPECT().GetAllEmployees().Return(employeeList, nil).Times(1)
+
+		server := gin.Default()
+		server.GET("Employee", empController.GetEmployess)
+		recorder := httptest.NewRecorder()
+
+		request := httptest.NewRequest(http.MethodGet, "/Employee", nil)
+
+		server.ServeHTTP(recorder, request)
+		require.Equal(t, http.StatusOK, recorder.Code)
+		requireBodyMatchEmployees(t, recorder.Body, employeeList)
+	})
+
+	t.Run("TestGetEmployess_InternalServerError", func(t *testing.T) {
+		employeeList := []*models.Employee{
+			{ID: 2,
+				Name:     "Ram",
+				Mobile:   "78589535",
+				Address:  "Delhi",
+				Salary:   34566,
+				Age:      23,
+				Username: "ram",
+				Password: "123",
+			}, {
+				ID:       3,
+				Name:     "Raj",
+				Mobile:   "7854589535",
+				Address:  "UP",
+				Salary:   36566,
+				Age:      21,
+				Username: "raj",
+				Password: "1234",
+			},
+		}
+
+		cntrl := gomock.NewController(t)
+		defer cntrl.Finish()
+
+		mockWorker := NewMockEmployeeService(cntrl)
+		empController := NewEmployeeController(mockWorker)
+		mockWorker.EXPECT().GetAllEmployees().Return(employeeList, errors.New("")).Times(1)
+
+		server := gin.Default()
+		server.GET("Employee", empController.GetEmployess)
+		recorder := httptest.NewRecorder()
+
+		request := httptest.NewRequest(http.MethodGet, "/Employee", nil)
+
+		server.ServeHTTP(recorder, request)
+		require.Equal(t, http.StatusInternalServerError, recorder.Code)
+
+	})
+
+}
+
+func TestCreateEmployess(t *testing.T) {
+
+	t.Run("TestCreateEmployess_Success", func(t *testing.T) {
+		employee := models.Employee{
 			ID:       3,
 			Name:     "Raj",
 			Mobile:   "7854589535",
@@ -38,39 +117,29 @@ func TestGetEmployess_Success(t *testing.T) {
 			Age:      21,
 			Username: "raj",
 			Password: "1234",
-		},
-	}
+		}
 
-	cntrl := gomock.NewController(t)
-	defer cntrl.Finish()
+		cntrl := gomock.NewController(t)
+		defer cntrl.Finish()
 
-	mockWorker := NewMockEmployeeService(cntrl)
-	empController := NewEmployeeController(mockWorker)
+		mockWorker := NewMockEmployeeService(cntrl)
+		empController := NewEmployeeController(mockWorker)
+		mockWorker.EXPECT().CreateEmployees(&employee).Return(nil)
 
-	mockWorker.EXPECT().GetAllEmployees().Return(employeeList, nil).Times(1)
+		server := gin.Default()
+		data, err := json.Marshal(employee)
+		require.NoError(t, err)
+		server.POST("Employee", empController.CreateEmployees)
+		recorder := httptest.NewRecorder()
 
-	server := gin.Default()
-	server.GET("Employee", empController.GetEmployess)
-	recorder := httptest.NewRecorder()
+		request := httptest.NewRequest(http.MethodPost, "/Employee", bytes.NewReader(data))
 
-	request := httptest.NewRequest(http.MethodGet, "/Employee", nil)
+		server.ServeHTTP(recorder, request)
+		require.Equal(t, http.StatusOK, recorder.Code)
 
-	server.ServeHTTP(recorder, request)
-	require.Equal(t, http.StatusOK, recorder.Code)
-	requireBodyMatchEmployees(t, recorder.Body, employeeList)
-
-}
-func TestGetEmployess_InternalServerError(t *testing.T) {
-	employeeList := []*models.Employee{
-		{ID: 2,
-			Name:     "Ram",
-			Mobile:   "78589535",
-			Address:  "Delhi",
-			Salary:   34566,
-			Age:      23,
-			Username: "ram",
-			Password: "123",
-		}, {
+	})
+	t.Run("TestCreateEmployess_InternalServerError", func(t *testing.T) {
+		employee := models.Employee{
 			ID:       3,
 			Name:     "Raj",
 			Mobile:   "7854589535",
@@ -79,270 +148,213 @@ func TestGetEmployess_InternalServerError(t *testing.T) {
 			Age:      21,
 			Username: "raj",
 			Password: "1234",
-		},
-	}
+		}
+		cntrl := gomock.NewController(t)
+		defer cntrl.Finish()
 
-	cntrl := gomock.NewController(t)
-	defer cntrl.Finish()
+		mockWorker := NewMockEmployeeService(cntrl)
+		empController := NewEmployeeController(mockWorker)
+		mockWorker.EXPECT().CreateEmployees(gomock.Any()).Return(errors.New(""))
 
-	mockWorker := NewMockEmployeeService(cntrl)
-	empController := NewEmployeeController(mockWorker)
-	mockWorker.EXPECT().GetAllEmployees().Return(employeeList, errors.New("")).Times(1)
+		server := gin.Default()
+		data, err := json.Marshal(employee)
+		require.NoError(t, err)
+		server.POST("Employee", empController.CreateEmployees)
+		recorder := httptest.NewRecorder()
 
-	server := gin.Default()
-	server.GET("Employee", empController.GetEmployess)
-	recorder := httptest.NewRecorder()
+		request := httptest.NewRequest(http.MethodPost, "/Employee", bytes.NewReader(data))
 
-	request := httptest.NewRequest(http.MethodGet, "/Employee", nil)
+		server.ServeHTTP(recorder, request)
+		require.Equal(t, http.StatusInternalServerError, recorder.Code)
+	})
 
-	server.ServeHTTP(recorder, request)
-	require.Equal(t, http.StatusInternalServerError, recorder.Code)
+	t.Run("TestCreateEmployess_BadRequest", func(t *testing.T) {
+		employee := models.Employee{
+			ID:       3,
+			Name:     "Raj",
+			Mobile:   "7854589535",
+			Address:  "UP",
+			Salary:   36566,
+			Age:      21,
+			Username: "raj",
+			Password: "1234",
+		}
+		cntrl := gomock.NewController(t)
+		defer cntrl.Finish()
 
+		mockWorker := NewMockEmployeeService(cntrl)
+		empController := NewEmployeeController(mockWorker)
+		mockWorker.EXPECT().CreateEmployees(&employee).Times(0).Return(nil)
+
+		server := gin.Default()
+
+		server.POST("Employee", empController.CreateEmployees)
+		recorder := httptest.NewRecorder()
+
+		request := httptest.NewRequest(http.MethodPost, "/Employee", nil)
+
+		server.ServeHTTP(recorder, request)
+		require.Equal(t, http.StatusBadRequest, recorder.Code)
+	})
 }
 
-func TestCreateEmployess_Success(t *testing.T) {
-	employee := models.Employee{
-		ID:       3,
-		Name:     "Raj",
-		Mobile:   "7854589535",
-		Address:  "UP",
-		Salary:   36566,
-		Age:      21,
-		Username: "raj",
-		Password: "1234",
-	}
+func TestGetEmployeeById(t *testing.T) {
 
-	cntrl := gomock.NewController(t)
-	defer cntrl.Finish()
+	t.Run("TestGetEmployeeById_Success", func(t *testing.T) {
+		employee := models.Employee{
+			ID:       3,
+			Name:     "Raj",
+			Mobile:   "7854589535",
+			Address:  "UP",
+			Salary:   36566,
+			Age:      21,
+			Username: "raj",
+			Password: "1234",
+		}
+		cntrl := gomock.NewController(t)
+		defer cntrl.Finish()
 
-	mockWorker := NewMockEmployeeService(cntrl)
-	empController := NewEmployeeController(mockWorker)
-	mockWorker.EXPECT().CreateEmployees(&employee).Return(nil)
+		mockWorker := NewMockEmployeeService(cntrl)
+		empController := NewEmployeeController(mockWorker)
+		var id string = strconv.FormatUint(uint64(employee.ID), 10)
+		mockWorker.EXPECT().GetEmployeeById(id).Return(&employee, nil)
 
-	server := gin.Default()
-	data, err := json.Marshal(employee)
-	require.NoError(t, err)
-	server.POST("Employee", empController.CreateEmployees)
-	recorder := httptest.NewRecorder()
+		server := gin.Default()
 
-	request := httptest.NewRequest(http.MethodPost, "/Employee", bytes.NewReader(data))
+		server.GET("Employee/:id", empController.GetEmployeeById)
+		recorder := httptest.NewRecorder()
+		url := fmt.Sprintf("/Employee/%s", id)
+		request := httptest.NewRequest(http.MethodGet, url, nil)
 
-	server.ServeHTTP(recorder, request)
-	require.Equal(t, http.StatusOK, recorder.Code)
+		server.ServeHTTP(recorder, request)
+		require.Equal(t, http.StatusOK, recorder.Code)
+		requireBodyMatchEmployee(t, recorder.Body, employee)
+	})
+	t.Run("TestGetEmployeeById_InternalServerError", func(t *testing.T) {
+		employee := models.Employee{
+			ID:       3,
+			Name:     "Raj",
+			Mobile:   "7854589535",
+			Address:  "UP",
+			Salary:   36566,
+			Age:      21,
+			Username: "raj",
+			Password: "1234",
+		}
+		cntrl := gomock.NewController(t)
+		defer cntrl.Finish()
 
-}
-func TestCreateEmployess_InternalServerError(t *testing.T) {
-	employee := models.Employee{
-		ID:       3,
-		Name:     "Raj",
-		Mobile:   "7854589535",
-		Address:  "UP",
-		Salary:   36566,
-		Age:      21,
-		Username: "raj",
-		Password: "1234",
-	}
-	cntrl := gomock.NewController(t)
-	defer cntrl.Finish()
+		mockWorker := NewMockEmployeeService(cntrl)
+		empController := NewEmployeeController(mockWorker)
+		var id string = strconv.FormatUint(uint64(employee.ID), 10)
 
-	mockWorker := NewMockEmployeeService(cntrl)
-	empController := NewEmployeeController(mockWorker)
-	mockWorker.EXPECT().CreateEmployees(gomock.Any()).Return(errors.New(""))
+		mockWorker.EXPECT().GetEmployeeById(id).Return(&employee, errors.New(""))
 
-	server := gin.Default()
-	data, err := json.Marshal(employee)
-	require.NoError(t, err)
-	server.POST("Employee", empController.CreateEmployees)
-	recorder := httptest.NewRecorder()
+		server := gin.Default()
 
-	request := httptest.NewRequest(http.MethodPost, "/Employee", bytes.NewReader(data))
+		server.GET("Employee/:id", empController.GetEmployeeById)
+		recorder := httptest.NewRecorder()
+		url := fmt.Sprintf("/Employee/%s", id)
+		request := httptest.NewRequest(http.MethodGet, url, nil)
 
-	server.ServeHTTP(recorder, request)
-	require.Equal(t, http.StatusInternalServerError, recorder.Code)
+		server.ServeHTTP(recorder, request)
+		require.Equal(t, http.StatusInternalServerError, recorder.Code)
 
-}
-func TestCreateEmployess_BadRequest(t *testing.T) {
-	employee := models.Employee{
-		ID:       3,
-		Name:     "Raj",
-		Mobile:   "7854589535",
-		Address:  "UP",
-		Salary:   36566,
-		Age:      21,
-		Username: "raj",
-		Password: "1234",
-	}
-	cntrl := gomock.NewController(t)
-	defer cntrl.Finish()
-
-	mockWorker := NewMockEmployeeService(cntrl)
-	empController := NewEmployeeController(mockWorker)
-	mockWorker.EXPECT().CreateEmployees(&employee).Times(0).Return(nil)
-
-	server := gin.Default()
-
-	server.POST("Employee", empController.CreateEmployees)
-	recorder := httptest.NewRecorder()
-
-	request := httptest.NewRequest(http.MethodPost, "/Employee", nil)
-
-	server.ServeHTTP(recorder, request)
-	require.Equal(t, http.StatusBadRequest, recorder.Code)
-
+	})
 }
 
-func TestGetEmployeeById_Success(t *testing.T) {
-	employee := models.Employee{
-		ID:       3,
-		Name:     "Raj",
-		Mobile:   "7854589535",
-		Address:  "UP",
-		Salary:   36566,
-		Age:      21,
-		Username: "raj",
-		Password: "1234",
-	}
-	cntrl := gomock.NewController(t)
-	defer cntrl.Finish()
+func TestUpdateEmployee(t *testing.T) {
 
-	mockWorker := NewMockEmployeeService(cntrl)
-	empController := NewEmployeeController(mockWorker)
-	var id string = strconv.FormatUint(uint64(employee.ID), 10)
-	mockWorker.EXPECT().GetEmployeeById(id).Return(&employee, nil)
+	t.Run("TestUpdateEmployee_Success", func(t *testing.T) {
+		employee := models.Employee{
+			ID:       3,
+			Name:     "Raj",
+			Mobile:   "7854589535",
+			Address:  "UP",
+			Salary:   36566,
+			Age:      21,
+			Username: "raj",
+			Password: "1234",
+		}
+		cntrl := gomock.NewController(t)
+		defer cntrl.Finish()
 
-	server := gin.Default()
+		mockWorker := NewMockEmployeeService(cntrl)
+		empController := NewEmployeeController(mockWorker)
+		var id string = strconv.FormatUint(uint64(employee.ID), 10)
+		mockWorker.EXPECT().UpdateEmployee(&employee, id).Times(1).Return(nil)
 
-	server.GET("Employee/:id", empController.GetEmployeeById)
-	recorder := httptest.NewRecorder()
-	url := fmt.Sprintf("/Employee/%s", id)
-	request := httptest.NewRequest(http.MethodGet, url, nil)
+		server := gin.Default()
+		data, err := json.Marshal(employee)
+		require.NoError(t, err)
 
-	server.ServeHTTP(recorder, request)
-	require.Equal(t, http.StatusOK, recorder.Code)
-	requireBodyMatchEmployee(t, recorder.Body, employee)
+		server.PUT("Employee/:id", empController.UpdateEmployee)
+		recorder := httptest.NewRecorder()
+		url := fmt.Sprintf("/Employee/%s", id)
+		request := httptest.NewRequest(http.MethodPut, url, bytes.NewReader(data))
 
-}
+		server.ServeHTTP(recorder, request)
+		require.Equal(t, http.StatusOK, recorder.Code)
+	})
+	t.Run("TestUpdateEmployess_InternalServerError", func(t *testing.T) {
+		employee := models.Employee{
+			ID:       3,
+			Name:     "Raj",
+			Mobile:   "7854589535",
+			Address:  "UP",
+			Salary:   36566,
+			Age:      21,
+			Username: "raj",
+			Password: "1234",
+		}
+		cntrl := gomock.NewController(t)
+		defer cntrl.Finish()
 
-func TestGetEmployeeById_InternalServerError(t *testing.T) {
-	employee := models.Employee{
-		ID:       3,
-		Name:     "Raj",
-		Mobile:   "7854589535",
-		Address:  "UP",
-		Salary:   36566,
-		Age:      21,
-		Username: "raj",
-		Password: "1234",
-	}
-	cntrl := gomock.NewController(t)
-	defer cntrl.Finish()
+		mockWorker := NewMockEmployeeService(cntrl)
+		empController := NewEmployeeController(mockWorker)
+		var id string = strconv.FormatUint(uint64(employee.ID), 10)
+		mockWorker.EXPECT().UpdateEmployee(gomock.Any(), gomock.Any()).Return(errors.New(""))
 
-	mockWorker := NewMockEmployeeService(cntrl)
-	empController := NewEmployeeController(mockWorker)
-	var id string = strconv.FormatUint(uint64(employee.ID), 10)
-	fmt.Print(id)
-	mockWorker.EXPECT().GetEmployeeById(id).Return(&employee, errors.New(""))
+		server := gin.Default()
+		data, err := json.Marshal(employee)
+		require.NoError(t, err)
+		server.PUT("Employee/:id", empController.UpdateEmployee)
+		recorder := httptest.NewRecorder()
+		url := fmt.Sprintf("/Employee/%s", id)
+		request := httptest.NewRequest(http.MethodPut, url, bytes.NewReader(data))
 
-	server := gin.Default()
+		server.ServeHTTP(recorder, request)
+		require.Equal(t, http.StatusInternalServerError, recorder.Code)
 
-	server.GET("Employee/:id", empController.GetEmployeeById)
-	recorder := httptest.NewRecorder()
-	url := fmt.Sprintf("/Employee/%s", id)
-	request := httptest.NewRequest(http.MethodGet, url, nil)
+	})
+	t.Run("TestUpdateEmployess_BadRequest", func(t *testing.T) {
+		employee := models.Employee{
+			ID:       3,
+			Name:     "Raj",
+			Mobile:   "7854589535",
+			Address:  "UP",
+			Salary:   36566,
+			Age:      21,
+			Username: "raj",
+			Password: "1234",
+		}
+		cntrl := gomock.NewController(t)
+		defer cntrl.Finish()
 
-	server.ServeHTTP(recorder, request)
-	require.Equal(t, http.StatusInternalServerError, recorder.Code)
+		mockWorker := NewMockEmployeeService(cntrl)
+		empController := NewEmployeeController(mockWorker)
+		var id string = strconv.FormatUint(uint64(employee.ID), 10)
+		mockWorker.EXPECT().UpdateEmployee(&employee, id).Times(0).Return(nil)
 
-}
-func TestUpdateEmployee_Success(t *testing.T) {
-	employee := models.Employee{
-		ID:       3,
-		Name:     "Raj",
-		Mobile:   "7854589535",
-		Address:  "UP",
-		Salary:   36566,
-		Age:      21,
-		Username: "raj",
-		Password: "1234",
-	}
-	cntrl := gomock.NewController(t)
-	defer cntrl.Finish()
+		server := gin.Default()
 
-	mockWorker := NewMockEmployeeService(cntrl)
-	empController := NewEmployeeController(mockWorker)
-	var id string = strconv.FormatUint(uint64(employee.ID), 10)
-	mockWorker.EXPECT().UpdateEmployee(&employee, id).Times(1).Return(nil)
+		server.PUT("Employee/:id", empController.CreateEmployees)
+		recorder := httptest.NewRecorder()
+		url := fmt.Sprintf("/Employee/%s", id)
+		request := httptest.NewRequest(http.MethodPut, url, nil)
 
-	server := gin.Default()
-	data, err := json.Marshal(employee)
-	require.NoError(t, err)
+		server.ServeHTTP(recorder, request)
+		require.Equal(t, http.StatusBadRequest, recorder.Code)
 
-	server.PUT("Employee/:id", empController.UpdateEmployee)
-	recorder := httptest.NewRecorder()
-	url := fmt.Sprintf("/Employee/%s", id)
-	request := httptest.NewRequest(http.MethodPut, url, bytes.NewReader(data))
-
-	server.ServeHTTP(recorder, request)
-	require.Equal(t, http.StatusOK, recorder.Code)
-}
-func TestUpdateEmployess_InternalServerError(t *testing.T) {
-	employee := models.Employee{
-		ID:       3,
-		Name:     "Raj",
-		Mobile:   "7854589535",
-		Address:  "UP",
-		Salary:   36566,
-		Age:      21,
-		Username: "raj",
-		Password: "1234",
-	}
-	cntrl := gomock.NewController(t)
-	defer cntrl.Finish()
-
-	mockWorker := NewMockEmployeeService(cntrl)
-	empController := NewEmployeeController(mockWorker)
-	var id string = strconv.FormatUint(uint64(employee.ID), 10)
-	mockWorker.EXPECT().UpdateEmployee(gomock.Any(), gomock.Any()).Return(errors.New(""))
-
-	server := gin.Default()
-	data, err := json.Marshal(employee)
-	require.NoError(t, err)
-	server.PUT("Employee/:id", empController.UpdateEmployee)
-	recorder := httptest.NewRecorder()
-	url := fmt.Sprintf("/Employee/%s", id)
-	request := httptest.NewRequest(http.MethodPut, url, bytes.NewReader(data))
-
-	server.ServeHTTP(recorder, request)
-	require.Equal(t, http.StatusInternalServerError, recorder.Code)
-
-}
-func TestUpdateEmployess_BadRequest(t *testing.T) {
-	employee := models.Employee{
-		ID:       3,
-		Name:     "Raj",
-		Mobile:   "7854589535",
-		Address:  "UP",
-		Salary:   36566,
-		Age:      21,
-		Username: "raj",
-		Password: "1234",
-	}
-	cntrl := gomock.NewController(t)
-	defer cntrl.Finish()
-
-	mockWorker := NewMockEmployeeService(cntrl)
-	empController := NewEmployeeController(mockWorker)
-	var id string = strconv.FormatUint(uint64(employee.ID), 10)
-	mockWorker.EXPECT().UpdateEmployee(&employee, id).Times(0).Return(nil)
-
-	server := gin.Default()
-
-	server.PUT("Employee/:id", empController.CreateEmployees)
-	recorder := httptest.NewRecorder()
-	url := fmt.Sprintf("/Employee/%s", id)
-	request := httptest.NewRequest(http.MethodPut, url, nil)
-
-	server.ServeHTTP(recorder, request)
-	require.Equal(t, http.StatusBadRequest, recorder.Code)
-
+	})
 }
