@@ -2,6 +2,8 @@ package Config
 
 import (
 	"fmt"
+	"rest/gin/util"
+
 	"gorm.io/gorm"
 )
 
@@ -15,23 +17,12 @@ type DBConfig struct {
 	DBName   string
 }
 
-func BuildDBConfig() *DBConfig {
-	dbConfig := DBConfig{
-		Host:     "localhost",
-		Port:     3306,
-		User:     "root",
-		Password: "root@123",
-		DBName:   "Employee",
-	}
-	return &dbConfig
-}
-
-func DbURL(dbConfig *DBConfig) string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
-		dbConfig.User,
-		dbConfig.Password,
-		dbConfig.Host,
-		dbConfig.Port,
-		dbConfig.DBName,
+func DbURL() string {
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		util.GetEnvVariable("DB_USER"),
+		util.GetEnvVariable("DB_PASSWORD"),
+		util.GetEnvVariable("DB_HOST"),
+		util.GetEnvVariable("DB_PORT"),
+		util.GetEnvVariable("DB_NAME"),
 	)
 }

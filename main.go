@@ -14,7 +14,7 @@ import (
 var err error
 
 func init() {
-	Config.DB, err = gorm.Open(mysql.Open(Config.DbURL(Config.BuildDBConfig())), &gorm.Config{})
+	Config.DB, err = gorm.Open(mysql.Open(Config.DbURL()), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Status:", err)
 	}
