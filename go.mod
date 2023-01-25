@@ -3,6 +3,7 @@ module rest/gin
 go 1.19
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/golang/mock v1.6.0

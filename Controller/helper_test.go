@@ -3,7 +3,6 @@ package Controller
 import (
 	"bytes"
 	"encoding/json"
-	"io"
 	"os"
 	"rest/gin/models"
 	"testing"
@@ -21,12 +20,10 @@ func requireBodyMatchEmployee(t *testing.T, body *bytes.Buffer, emp models.Emplo
 }
 
 func requireBodyMatchEmployees(t *testing.T, body *bytes.Buffer, emp []*models.Employee) {
-	data, err := io.ReadAll(body)
-	require.NoError(t, err)
 
 	var gotemp []*models.Employee
 
-	err = json.Unmarshal(data, &gotemp)
+	err := json.Unmarshal(body.Bytes(), &gotemp)
 	require.NoError(t, err)
 	require.Equal(t, emp, gotemp)
 }
