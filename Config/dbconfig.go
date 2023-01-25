@@ -1,21 +1,12 @@
 package Config
 
 import (
+	"database/sql"
 	"fmt"
 	"rest/gin/util"
-
-	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
-
-type DBConfig struct {
-	Host     string
-	Port     int
-	User     string
-	Password string
-	DBName   string
-}
+var DB *sql.DB
 
 func DbURL() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
