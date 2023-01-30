@@ -46,7 +46,7 @@ func (ec *EmployeeController) CreateEmployees(c *gin.Context) {
 
 	err := ec.employeeService.CreateEmployees(&employee)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error while creating Employee"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, employee)
 	}
@@ -57,12 +57,13 @@ func (ec *EmployeeController) UpdateEmployee(c *gin.Context) {
 	var employee models.Employee
 	id := c.Param("id")
 	if err := c.BindJSON(&employee); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Records not Found"})
 		return
 	}
+
 	err := ec.employeeService.UpdateEmployee(&employee, id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Employee Not Exist"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, employee)
 	}
