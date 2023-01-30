@@ -1,9 +1,9 @@
-package Controller
+package controller
 
 import (
 	"net/http"
-	service "rest/gin/Service"
 	"rest/gin/models"
+	service "rest/gin/service"
 
 	"github.com/gin-gonic/gin"
 )

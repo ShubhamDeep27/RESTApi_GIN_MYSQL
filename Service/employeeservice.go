@@ -1,7 +1,7 @@
 package service
 
 import (
-	dao "rest/gin/Dao"
+	dao "rest/gin/dao"
 	models "rest/gin/models"
 )
 

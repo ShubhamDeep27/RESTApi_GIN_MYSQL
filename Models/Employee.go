@@ -10,7 +10,3 @@ type Employee struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
-
-func (b *Employee) TableName() string {
-	return "Employee"
-}

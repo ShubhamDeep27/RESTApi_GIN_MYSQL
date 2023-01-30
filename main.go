@@ -3,9 +3,9 @@ package main
 import (
 	"database/sql"
 	"log"
-	"rest/gin/Config"
+	Config "rest/gin/config"
 
-	"rest/gin/Routes"
+	Routes "rest/gin/routes"
 )
 
 var err error

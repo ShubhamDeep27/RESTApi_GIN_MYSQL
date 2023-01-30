@@ -1,10 +1,9 @@
-package Routes
+package routes
 
 import (
-	"rest/gin/Controller"
-	dao "rest/gin/Dao"
-
-	service "rest/gin/Service"
+	Controller "rest/gin/controller"
+	dao "rest/gin/dao"
+	service "rest/gin/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +20,6 @@ func SetupRouter() *gin.Engine {
 	r.POST("Employee", empContoller.CreateEmployees)
 	r.PUT("Employee/:id", empContoller.UpdateEmployee)
 	r.GET("Employee/:id", empContoller.GetEmployeeById)
-
 
 	return r
 }

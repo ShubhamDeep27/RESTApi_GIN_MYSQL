@@ -2,7 +2,7 @@ package dao
 
 import (
 	"log"
-	"rest/gin/Config"
+	Config "rest/gin/config"
 	"rest/gin/models"
 
 	_ "github.com/go-sql-driver/mysql"
