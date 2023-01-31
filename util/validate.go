@@ -2,9 +2,9 @@ package util
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
 	"rest/gin/models"
+	"unicode"
 )
 
 func ValidateMobileNumber(phone string) bool {
@@ -16,7 +16,6 @@ func ValidateMobileNumber(phone string) bool {
 func ValidateName(name string) bool {
 
 	const nameregex = `^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$`
-	fmt.Print(name, regexp.MustCompile(nameregex).MatchString(name))
 	return regexp.MustCompile(nameregex).MatchString(name)
 }
 
@@ -27,6 +26,33 @@ func ValidateAge(age int) bool {
 func ValidateSalary(salary int) bool {
 	return salary >= 0
 }
+func ValidatePassword(pwd string) bool {
+
+	var (
+		hasMinLen  = false
+		hasUpper   = false
+		hasLower   = false
+		hasNumber  = false
+		hasSpecial = false
+	)
+	if len(pwd) >= 7 {
+		hasMinLen = true
+	}
+	for _, char := range pwd {
+		switch {
+		case unicode.IsUpper(char):
+			hasUpper = true
+		case unicode.IsLower(char):
+			hasLower = true
+		case unicode.IsNumber(char):
+			hasNumber = true
+		case unicode.IsPunct(char) || unicode.IsSymbol(char):
+			hasSpecial = true
+		}
+	}
+	return hasMinLen && hasUpper && hasLower && hasNumber && hasSpecial
+}
+
 func EmployeeValidation(employee *models.CreateEmployee) error {
 
 	if !ValidateName(employee.Name) {
@@ -40,6 +66,9 @@ func EmployeeValidation(employee *models.CreateEmployee) error {
 	}
 	if !ValidateSalary(employee.Salary) {
 		return errors.New("invalid salary")
+	}
+	if !ValidatePassword(employee.Password) {
+		return errors.New("invalid Password")
 	}
 	return nil
 
