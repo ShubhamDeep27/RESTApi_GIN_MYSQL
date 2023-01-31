@@ -9,7 +9,7 @@ import (
 
 type EmployeeDao interface {
 	GetAllEmployees() ([]*models.Employee, error)
-	CreateEmployees(employee *models.Employee) error
+	CreateEmployees(employee *models.CreateEmployee) error
 	GetEmployeeById(id string) (*models.Employee, error)
 	UpdateEmployee(employee *models.Employee, id string) error
 }
@@ -30,7 +30,7 @@ func (ed *EmployeeDaoImpl) GetAllEmployees() ([]*models.Employee, error) {
 
 }
 
-func (ed *EmployeeDaoImpl) CreateEmployees(employee *models.Employee) (err error) {
+func (ed *EmployeeDaoImpl) CreateEmployees(employee *models.CreateEmployee) (err error) {
 
 	if err = Config.DB.Create(&employee).Error; err != nil {
 		return err
