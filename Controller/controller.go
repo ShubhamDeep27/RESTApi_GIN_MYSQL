@@ -51,7 +51,15 @@ func (ec *EmployeeController) CreateEmployees(c *gin.Context) {
 		c.JSON(http.StatusOK, employee)
 	}
 }
+func (ec *EmployeeController) CreateEmployeesImaginary(c *gin.Context) {
 
+	response, err := ec.employeeService.CreateEmployeesImaginary()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error while creating Employee"})
+	} else {
+		c.JSON(http.StatusOK, response)
+	}
+}
 func (ec *EmployeeController) UpdateEmployee(c *gin.Context) {
 
 	var employee models.Employee

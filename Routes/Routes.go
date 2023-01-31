@@ -19,9 +19,9 @@ func SetupRouter() *gin.Engine {
 
 	r.GET("Employee", empContoller.GetEmployess)
 	r.POST("Employee", empContoller.CreateEmployees)
+	r.POST("PushData", empContoller.CreateEmployeesImaginary)
 	r.PUT("Employee/:id", empContoller.UpdateEmployee)
 	r.GET("Employee/:id", empContoller.GetEmployeeById)
-
 
 	return r
 }
