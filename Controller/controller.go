@@ -4,6 +4,7 @@ import (
 	"net/http"
 	service "rest/gin/Service"
 	"rest/gin/models"
+	"rest/gin/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,32 +24,33 @@ func (ec *EmployeeController) GetEmployess(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Records not Found"})
 
 	} else {
-		c.JSON(http.StatusOK, employee)
+
+		c.JSON(http.StatusOK, models.GetAllEmployeeResponse{Data: employee, Status: "Success", Message: "Successfully! Get All Records."})
 	}
 }
 func (ec *EmployeeController) GetEmployeeById(c *gin.Context) {
 	id := c.Param("id")
 	employee, err := ec.employeeService.GetEmployeeById(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Employee Not Exist"})
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{ErrorCode: "501", ErrorMsg: util.GET_ERROR_MSGS["501"]})
 
 	} else {
-		c.JSON(http.StatusOK, employee)
+		c.JSON(http.StatusOK, models.GetEmployeeByIdResponse{Data: employee, Status: "Success", Message: "Successfully! Get the Record"})
 	}
 }
 func (ec *EmployeeController) CreateEmployees(c *gin.Context) {
-	var employee models.Employee
+	var employee models.CreateEmployee
 
 	if err := c.BindJSON(&employee); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{ErrorCode: "502", ErrorMsg: util.GET_ERROR_MSGS["502"]})
 		return
 	}
 
 	err := ec.employeeService.CreateEmployees(&employee)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error while creating Employee"})
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{ErrorCode: "503", ErrorMsg: err.Error()})
 	} else {
-		c.JSON(http.StatusOK, employee)
+		c.JSON(http.StatusOK, models.CreateEmployeeResponse{Data: &employee, Status: "Success", Message: "Successfully! Record has been added"})
 	}
 }
 func (ec *EmployeeController) CreateEmployeesImaginary(c *gin.Context) {
@@ -65,14 +67,14 @@ func (ec *EmployeeController) UpdateEmployee(c *gin.Context) {
 	var employee models.Employee
 	id := c.Param("id")
 	if err := c.BindJSON(&employee); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{ErrorCode: "502", ErrorMsg: util.GET_ERROR_MSGS["502"]})
 		return
 	}
 	err := ec.employeeService.UpdateEmployee(&employee, id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Employee Not Exist"})
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{ErrorCode: "501", ErrorMsg: util.GET_ERROR_MSGS["501"]})
 	} else {
-		c.JSON(http.StatusOK, employee)
+		c.JSON(http.StatusOK, models.UpdateEmployeeResponse{Data: &employee, Status: "Success", Message: "Successfully! Record has been added"})
 	}
 
 }
