@@ -1,0 +1,26 @@
+services:
+  app:
+    image: golang:1.19
+    command: sh -c "go run main.go"
+    ports:
+      - 8080:8080
+    working_dir: /RESTApi-GIN-MySQL
+    volumes:
+      - ./:/RESTApi-GIN-MySQL
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root@123
+      MYSQL_DB: Employee
+
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - mysql-data2:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root@123
+      MYSQL_DATABASE: Employee
+      
+
+volumes:
+  mysql-data2:
