@@ -47,8 +47,8 @@ func (ec *EmployeeController) CreateEmployees(c *gin.Context) {
 	}
 
 	err := ec.employeeService.CreateEmployees(&employee)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, models.ErrorResponse{ErrorCode: "503", ErrorMsg: err.Error()})
+	if err != (models.ErrorResponse{}) {
+		c.JSON(http.StatusInternalServerError, err)
 	} else {
 		c.JSON(http.StatusOK, models.CreateEmployeeResponse{Data: &employee, Status: "Success", Message: "Successfully! Record has been added"})
 	}
@@ -67,12 +67,12 @@ func (ec *EmployeeController) UpdateEmployee(c *gin.Context) {
 	var employee models.CreateEmployee
 	id := c.Param("id")
 	if err := c.BindJSON(&employee); err != nil {
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{ErrorCode: "502", ErrorMsg: err.Error()})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{ErrorCode: "506", ErrorMsg: util.GET_ERROR_MSGS["506"]})
 		return
 	}
 	err := ec.employeeService.UpdateEmployee(&employee, id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, models.ErrorResponse{ErrorCode: "501", ErrorMsg: util.GET_ERROR_MSGS["501"]})
+	if err != (models.ErrorResponse{}) {
+		c.JSON(http.StatusInternalServerError, err)
 	} else {
 		c.JSON(http.StatusOK, models.UpdateEmployeeResponse{Data: &employee, Status: "Success", Message: "Successfully! Record has been added"})
 	}

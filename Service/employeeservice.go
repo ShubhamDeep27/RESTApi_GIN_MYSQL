@@ -15,9 +15,9 @@ import (
 
 type EmployeeService interface {
 	GetAllEmployees() ([]*models.Employee, error)
-	CreateEmployees(employee *models.CreateEmployee) (err error)
+	CreateEmployees(employee *models.CreateEmployee) models.ErrorResponse
 	GetEmployeeById(id string) (*models.Employee, error)
-	UpdateEmployee(employee *models.CreateEmployee, id string) (err error)
+	UpdateEmployee(employee *models.CreateEmployee, id string) models.ErrorResponse
 	CreateEmployeesImaginary() ([]map[string]interface{}, error)
 }
 type EmployeeServiceImpl struct {
@@ -38,18 +38,18 @@ func (es *EmployeeServiceImpl) GetAllEmployees() ([]*models.Employee, error) {
 
 }
 
-func (es *EmployeeServiceImpl) CreateEmployees(employee *models.CreateEmployee) error {
+func (es *EmployeeServiceImpl) CreateEmployees(employee *models.CreateEmployee) models.ErrorResponse {
 
 	err := util.EmployeeValidation(employee)
-	if err != nil {
+	if err != (models.ErrorResponse{}) {
 		return err
 	}
-	err = es.empdao.CreateEmployees(employee)
-	if err != nil {
-		return err
+	errs := es.empdao.CreateEmployees(employee)
+	if errs != nil {
+		return models.ErrorResponse{ErrorCode: "503", ErrorMsg: util.GET_ERROR_MSGS["503"]}
 
 	}
-	return nil
+	return models.ErrorResponse{}
 
 }
 
@@ -63,22 +63,22 @@ func (es *EmployeeServiceImpl) GetEmployeeById(id string) (*models.Employee, err
 
 }
 
-func (es *EmployeeServiceImpl) UpdateEmployee(employee *models.CreateEmployee, id string) error {
+func (es *EmployeeServiceImpl) UpdateEmployee(employee *models.CreateEmployee, id string) models.ErrorResponse {
 	_, err := es.empdao.GetEmployeeById(id)
 	if err != nil {
-		return err
+		return models.ErrorResponse{ErrorCode: "501", ErrorMsg: util.GET_ERROR_MSGS["501"]}
 	}
-	err = util.EmployeeValidation(employee)
-	if err != nil {
-		return err
+	errVal := util.EmployeeValidation(employee)
+	if errVal != (models.ErrorResponse{}) {
+		return errVal
 	}
 
 	err = es.empdao.UpdateEmployee(employee, id)
 	if err != nil {
-		return err
+		return models.ErrorResponse{ErrorCode: "502", ErrorMsg: util.GET_ERROR_MSGS["502"]}
 	}
 
-	return nil
+	return models.ErrorResponse{}
 
 }
 

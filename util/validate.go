@@ -1,7 +1,6 @@
 package util
 
 import (
-	"errors"
 	"regexp"
 	"rest/gin/models"
 	"unicode"
@@ -53,23 +52,23 @@ func ValidatePassword(pwd string) bool {
 	return hasMinLen && hasUpper && hasLower && hasNumber && hasSpecial
 }
 
-func EmployeeValidation(employee *models.CreateEmployee) error {
+func EmployeeValidation(employee *models.CreateEmployee) models.ErrorResponse {
 
 	if !ValidateName(employee.Name) {
-		return errors.New("invalid name")
+		return models.ErrorResponse{ErrorCode: "5031", ErrorMsg: GET_ERROR_MSGS["5031"]}
 	}
 	if !ValidateMobileNumber(employee.Mobile) {
-		return errors.New("invalid mobile number")
+		return models.ErrorResponse{ErrorCode: "5032", ErrorMsg: GET_ERROR_MSGS["5032"]}
 	}
 	if !ValidateAge(employee.Age) {
-		return errors.New("invalid age")
+		return models.ErrorResponse{ErrorCode: "5033", ErrorMsg: GET_ERROR_MSGS["5033"]}
 	}
 	if !ValidateSalary(employee.Salary) {
-		return errors.New("invalid salary")
+		return models.ErrorResponse{ErrorCode: "5034", ErrorMsg: GET_ERROR_MSGS["5034"]}
 	}
 	if !ValidatePassword(employee.Password) {
-		return errors.New("invalid Password")
+		return models.ErrorResponse{ErrorCode: "5035", ErrorMsg: GET_ERROR_MSGS["5035"]}
 	}
-	return nil
+	return models.ErrorResponse{}
 
 }
