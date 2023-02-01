@@ -1,7 +1,7 @@
 
-# CRUD REST API GOLANG GORM AND MYSQL
+# CRUD REST API GOLANG GIN,GORM AND MYSQL
 
-This repository Application of REST Api with Golang,GORM (ORM),MySQL and Testing(mockgen,httptest).
+This repository is Application of REST Api with Golang,GORM (ORM),MySQL and Unit Testing(mockgen,httptest).
 
 
 ## Usage/Examples
