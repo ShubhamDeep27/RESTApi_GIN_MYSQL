@@ -1,7 +1,7 @@
 
-# Project Title
+# CRUD REST API GOLANG GORM AND MYSQL
 
-CRUD REST API GOLANG GORM AND MYSQL
+This repository Application of REST Api with Golang,GORM (ORM),MySQL and Testing(mockgen,httptest).
 
 
 ## Usage/Examples
