@@ -66,7 +66,7 @@ func (es *EmployeeServiceImpl) GetEmployeeById(id string) (*models.Employee, err
 func (es *EmployeeServiceImpl) UpdateEmployee(employee *models.CreateEmployee, id string) models.ErrorResponse {
 	_, err := es.empdao.GetEmployeeById(id)
 	if err != nil {
-		return models.ErrorResponse{ErrorCode: "501", ErrorMsg: util.GET_ERROR_MSGS["501"]}
+		return models.ErrorResponse{ErrorCode: "502", ErrorMsg: util.GET_ERROR_MSGS["501"]}
 	}
 	errVal := util.EmployeeValidation(employee)
 	if errVal != (models.ErrorResponse{}) {
@@ -75,7 +75,7 @@ func (es *EmployeeServiceImpl) UpdateEmployee(employee *models.CreateEmployee, i
 
 	err = es.empdao.UpdateEmployee(employee, id)
 	if err != nil {
-		return models.ErrorResponse{ErrorCode: "502", ErrorMsg: util.GET_ERROR_MSGS["502"]}
+		return models.ErrorResponse{ErrorCode: "507", ErrorMsg: util.GET_ERROR_MSGS["507"]}
 	}
 
 	return models.ErrorResponse{}
@@ -105,7 +105,6 @@ func (es *EmployeeServiceImpl) CreateEmployeesImaginary() ([]map[string]interfac
 
 	}
 	wg.Wait()
-	// fmt.Println(data)
 	return data, nil
 }
 func PostReq(emp models.Employee) (map[string]interface{}, error) {

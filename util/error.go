@@ -12,4 +12,5 @@ var GET_ERROR_MSGS = map[string]string{
 	"504":  "Error while updating Employee",
 	"505":  "Error while Creating Employee on ImaginaryService",
 	"506":  "Error Invalid Format",
+	"507":  "Error While Updating Employee",
 }
