@@ -79,7 +79,7 @@ API Server technology stack is
 
 ## Deployment
 
-To this project run
+To Run this project
 
 ```bash
   go run main.go
