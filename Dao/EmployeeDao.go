@@ -3,7 +3,7 @@ package dao
 import (
 	"rest/gin/Config"
 	"rest/gin/models"
-
+   "strconv"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -11,7 +11,7 @@ type EmployeeDao interface {
 	GetAllEmployees() ([]*models.Employee, error)
 	CreateEmployees(employee *models.CreateEmployee) error
 	GetEmployeeById(id string) (*models.Employee, error)
-	UpdateEmployee(employee *models.Employee, id string) error
+	UpdateEmployee(employee *models.CreateEmployee, id string) error
 }
 
 type EmployeeDaoImpl struct {
@@ -47,8 +47,21 @@ func (ed *EmployeeDaoImpl) GetEmployeeById(id string) (*models.Employee, error) 
 	return employee, nil
 }
 
-func (ed *EmployeeDaoImpl) UpdateEmployee(employee *models.Employee, id string) (err error) {
-	if err = Config.DB.Save(employee).Error; err != nil {
+func (ed *EmployeeDaoImpl) UpdateEmployee(employee *models.CreateEmployee, id string) (err error) {
+	empid,_:=strconv.ParseInt(id, 10, 32)
+     employeeToEdit:=models.Employee{
+        ID:empid,
+		Name:employee.Name,
+		Mobile:employee.Mobile,
+        Address:employee.Address,
+		Age:employee.Age,
+		Salary:employee.Salary,
+        Username:employee.Username,
+		Password:employee.Password,
+    }
+	 
+	
+	if err = Config.DB.Save(&employeeToEdit).Error; err != nil {
 		return err
 	}
 	return nil

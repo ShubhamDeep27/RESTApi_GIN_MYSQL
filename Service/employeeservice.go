@@ -5,18 +5,19 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
 	dao "rest/gin/Dao"
 	models "rest/gin/models"
+	"rest/gin/util"
 	"strconv"
 	"sync"
-	"rest/gin/util"
 )
 
 type EmployeeService interface {
 	GetAllEmployees() ([]*models.Employee, error)
 	CreateEmployees(employee *models.CreateEmployee) (err error)
 	GetEmployeeById(id string) (*models.Employee, error)
-	UpdateEmployee(employee *models.Employee, id string) (err error)
+	UpdateEmployee(employee *models.CreateEmployee, id string) (err error)
 	CreateEmployeesImaginary() ([]map[string]interface{}, error)
 }
 type EmployeeServiceImpl struct {
@@ -62,11 +63,16 @@ func (es *EmployeeServiceImpl) GetEmployeeById(id string) (*models.Employee, err
 
 }
 
-func (es *EmployeeServiceImpl) UpdateEmployee(employee *models.Employee, id string) error {
+func (es *EmployeeServiceImpl) UpdateEmployee(employee *models.CreateEmployee, id string) error {
 	_, err := es.empdao.GetEmployeeById(id)
 	if err != nil {
 		return err
 	}
+	err = util.EmployeeValidation(employee)
+	if err != nil {
+		return err
+	}
+
 	err = es.empdao.UpdateEmployee(employee, id)
 	if err != nil {
 		return err

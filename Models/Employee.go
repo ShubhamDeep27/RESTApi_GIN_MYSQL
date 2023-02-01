@@ -1,7 +1,7 @@
 package models
 
 type Employee struct {
-	ID       uint   `json:"id"`
+	ID       int64  `json:"id"`
 	Name     string `json:"name"`
 	Mobile   string `json:"mobile"`
 	Address  string `json:"address"`
@@ -36,9 +36,9 @@ type CreateEmployeeResponse struct {
 	Message string          `json:"message"`
 }
 type UpdateEmployeeResponse struct {
-	Data    *Employee `json:"data"`
-	Status  string    `json:"status"`
-	Message string    `json:"message"`
+	Data    *CreateEmployee `json:"data"`
+	Status  string          `json:"status"`
+	Message string          `json:"message"`
 }
 type ErrorResponse struct {
 	ErrorCode string `json:"error_code"`

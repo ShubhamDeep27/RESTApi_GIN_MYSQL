@@ -57,17 +57,17 @@ func (ec *EmployeeController) CreateEmployeesImaginary(c *gin.Context) {
 
 	response, err := ec.employeeService.CreateEmployeesImaginary()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error while creating Employee"})
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{ErrorCode: "505", ErrorMsg: util.GET_ERROR_MSGS["505"]})
 	} else {
 		c.JSON(http.StatusOK, response)
 	}
 }
 func (ec *EmployeeController) UpdateEmployee(c *gin.Context) {
 
-	var employee models.Employee
+	var employee models.CreateEmployee
 	id := c.Param("id")
 	if err := c.BindJSON(&employee); err != nil {
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{ErrorCode: "502", ErrorMsg: util.GET_ERROR_MSGS["502"]})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{ErrorCode: "502", ErrorMsg: err.Error()})
 		return
 	}
 	err := ec.employeeService.UpdateEmployee(&employee, id)
