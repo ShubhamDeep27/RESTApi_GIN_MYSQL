@@ -1,10 +1,10 @@
-package Routes
+package routes
 
 import (
-	"rest/gin/Controller"
-	dao "rest/gin/Dao"
+	"rest/gin/controller"
+	"rest/gin/dao"
 
-	service "rest/gin/Service"
+	"rest/gin/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +13,7 @@ func SetupRouter() *gin.Engine {
 
 	empDao := dao.NewEmployeeDaoImpl()
 	empService := service.NewEmployeeServiceImpl(empDao)
-	empContoller := Controller.NewEmployeeController(empService)
+	empContoller := controller.NewEmployeeController(empService)
 
 	r := gin.Default()
 

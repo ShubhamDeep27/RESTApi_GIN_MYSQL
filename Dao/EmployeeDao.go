@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"rest/gin/Config"
+	"rest/gin/config"
 	"rest/gin/models"
 	"strconv"
 
@@ -25,7 +25,7 @@ func NewEmployeeDaoImpl() *EmployeeDaoImpl {
 
 func (ed *EmployeeDaoImpl) GetAllEmployees() ([]*models.Employee, error) {
 	var employee []*models.Employee
-	if err := Config.DB.Find(&employee).Error; err != nil {
+	if err := config.DB.Find(&employee).Error; err != nil {
 		return employee, err
 	}
 	return employee, nil
@@ -38,7 +38,7 @@ func (ed *EmployeeDaoImpl) CreateEmployees(employee *models.CreateEmployee) erro
 		return err
 	}
 	employee.Password = string(hashedPassword)
-	if err = Config.DB.Create(&employee).Error; err != nil {
+	if err = config.DB.Create(&employee).Error; err != nil {
 		return err
 	}
 
@@ -47,7 +47,7 @@ func (ed *EmployeeDaoImpl) CreateEmployees(employee *models.CreateEmployee) erro
 
 func (ed *EmployeeDaoImpl) GetEmployeeById(id string) (*models.Employee, error) {
 	var employee *models.Employee
-	if err := Config.DB.Where("id = ?", id).First(&employee).Error; err != nil {
+	if err := config.DB.Where("id = ?", id).First(&employee).Error; err != nil {
 		return employee, err
 	}
 	return employee, nil
@@ -66,7 +66,7 @@ func (ed *EmployeeDaoImpl) UpdateEmployee(employee *models.CreateEmployee, id st
 		Password: employee.Password,
 	}
 
-	if err = Config.DB.Save(&employeeToEdit).Error; err != nil {
+	if err = config.DB.Save(&employeeToEdit).Error; err != nil {
 		return err
 	}
 	return nil

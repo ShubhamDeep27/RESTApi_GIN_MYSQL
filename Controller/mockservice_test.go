@@ -2,7 +2,7 @@
 // Source: rest/gin/service (interfaces: EmployeeService)
 
 // Package mock_service is a generated GoMock package.
-package Controller
+package controller
 
 import (
 	reflect "reflect"

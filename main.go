@@ -2,10 +2,10 @@ package main
 
 import (
 	"log"
-	"rest/gin/Config"
+	"rest/gin/config"
 	"rest/gin/models"
 
-	"rest/gin/Routes"
+	"rest/gin/routes"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -14,17 +14,17 @@ import (
 var err error
 
 func init() {
-	Config.DB, err = gorm.Open(mysql.Open(Config.DbURL()), &gorm.Config{})
+	config.DB, err = gorm.Open(mysql.Open(config.DbURL()), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Status:", err)
 	}
 
-	Config.DB.AutoMigrate(&models.Employee{})
+	config.DB.AutoMigrate(&models.Employee{})
 
 }
 
 func main() {
 
-	r := Routes.SetupRouter()
+	r := routes.SetupRouter()
 	r.Run()
 }

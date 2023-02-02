@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	dao "rest/gin/Dao"
-	models "rest/gin/models"
+	"rest/gin/dao"
+	"rest/gin/models"
 	"rest/gin/util"
 	"strconv"
 	"sync"
